@@ -52,14 +52,6 @@ public class G{
     public boolean hit(int x, int y) {
       return loc.x<=x && loc.y <=y && x<=(loc.x+size.x) && y<=(loc.y+size.y);
     }
-    // rubberband
-    public void resize(int x, int y) {
-      if(x > loc.x && y > loc.y) {
-        size.set(x - loc.x, y - loc.y);
-      }
-    }
-    // drag rectangle to move
-    public void move(int x, int y) {loc.set(x, y);}
 
   }
 

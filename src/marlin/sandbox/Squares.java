@@ -1,6 +1,7 @@
 package marlin.sandbox;
 import marlin.graphicsLib.G;
 import marlin.graphicsLib.Window;
+import marlin.I;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,75 +10,97 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
+/*
+注意：核心思想
+1. Static Nested Class 来 access
+2. 通过implements interface来实现函数，传递不同的实例。
+   进而通过不同实例来实现判断，而不是用if...else...statement
+ */
 
 public class Squares extends Window implements ActionListener {
-  public static Square.List daList = new Square.List();
-
+  /*
+  Variables
+   */
+  public static I.Area curArea;
+  public static Square.List LIST = new Square.List();
   public static Square daSquare;
-
-  private boolean dragging = false;
+  // Used for dragging offset.
   private static G.V mouseDelta = new G.V(0, 0);
 
-  public static Timer timer;
-  // we will set this when the mouse is pressed
-  public static G.V pressedLoc = new G.V(0,0);
+  //注意：BACKGROUND 是一个 anonymous subclass
+  // 他虽然是一个Square object，但是重写了pressed 和 dragged 函数，用来应对resize(rubberband)
+  public static Square BACKGROUND = new Square(0,0) // this will be our back square BUT FIRST some overrides
+  {
+    // Override two functions for rubberband(resize)
+    public void pressed(int x, int y){daSquare = new Square(x, y); LIST.add(daSquare);}
+    public void dragged(int x, int y){daSquare.resize(x,y);}
+  };
 
+  // Initializing that special first BACKGROUND Square and put it FIRST on LIST!
+  static{BACKGROUND.c = Color.WHITE; BACKGROUND.size.set(3000,3000);
+  LIST.add(BACKGROUND);}
+
+  // For Animation
+  public static Timer timer;
+
+  /*
+  Functions
+   */
+  // construct function
   public Squares() {
     super("Squares", 1000, 800);
     timer = new Timer(30,this);
-    timer.setInitialDelay(5000); // I give myself 5 seconds before the timer starts
+    timer.setInitialDelay(5000); // 5 seconds before the timer starts
     timer.start(); // start the timer
   }
 
-  public void actionPerformed(ActionEvent ae){repaint();}
-
   protected void paintComponent(Graphics g){
-    G.fillBackground(g, Color.WHITE);
-    daList.draw(g);
+    LIST.draw(g);
   }
 
   // drag or create rectangle according to whether mouse hit existed one.
   public void mousePressed(MouseEvent me) {
     int x = me.getX(), y = me.getY();
-    daSquare = daList.hit(x, y);
-    if(daSquare == null) {
-      dragging = false;
-      //daList.addNew(me.getX(), me.getY());
-      daSquare = new Square(x, y);
-      daList.add(daSquare);
-    } else {
-      dragging = true;
-      daSquare.dv.set(0,0);  // <-- we add this line to stop the velocity for the clicked square
-      pressedLoc.set(x,y);   // also create a static G.V pressedLoc to Store the place where the mouse went down
-      mouseDelta.set(daSquare.loc.x - x, daSquare.loc.y - y);
-    }
+    // 注意：should always succeed because of BACKGROUND
+    curArea = LIST.hit(x,y);
+    curArea.pressed(x,y);
     repaint(); // don't forget to repaint when you change something.
   }
 
   // drag mouse to either reshape or move
   public void mouseDragged(MouseEvent me) {
-    int x = me.getX(), y = me.getY();
-    if(dragging) {
-      daSquare.move(x + mouseDelta.x, y + mouseDelta.y);
-    } else {
-      daSquare.resize(x, y);
-    }
+    curArea.dragged(me.getX(), me.getY());
     repaint();
   }
 
+  // Override ActionListener function
+  public void actionPerformed(ActionEvent ae){repaint();}
+
   /*
-  Keep track of multiple squares
+  Nested classes
+  Square object and
+  List of squares, to keep track of multiple squares
    */
-  public static class Square extends G.VS{
+  public static class Square extends G.VS implements I.Area {
     public Color c = G.rndColor();
+
     // velocity
-    //public G.V dv = new G.V(G.rnd(20)-10, G.rnd(20)-10);
-    public G.V dv = new G.V(0,0); // stop the motion!
+    public G.V dv = new G.V(G.rnd(20)-10, G.rnd(20)-10);
+    //public G.V dv = new G.V(0,0); // stop the motion!
 
     public Square(int x, int y){super(x,y,100,100);}
-
+    // Draw Square
     public void draw(Graphics g){fill(g, c); moveAndBounce();}
 
+    // rubberband
+    public void resize(int x, int y) {
+      if(x > loc.x && y > loc.y) {
+        size.set(x - loc.x, y - loc.y);
+      }
+    }
+    // drag rectangle to move
+    public void move(int x, int y) {loc.set(x, y);}
+    // move with bounce for Animation
     public void moveAndBounce(){
       loc.add(dv);
       if(lox() < 0 && dv.x <0){dv.x = - dv.x;}
@@ -86,6 +109,19 @@ public class Squares extends Window implements ActionListener {
       if(hiy() > 800 && dv.y >0){dv.y = - dv.y;}
     }
 
+    //overide interface functions for dragging
+    // Squares already implement hit() from parent(G.VS).
+    // calculate drag offset
+    public void pressed(int x, int y) {
+      mouseDelta.set(loc.x - x, loc.y - y);
+      dv.set(0,0); // stop moving once clicked
+    }
+    public void dragged(int x, int y){loc.set(mouseDelta.x + x, mouseDelta.y + y);}
+    public void released(int x, int y){}
+
+    /*
+     Nested class storing all Squares
+     */
     public static class List extends ArrayList<Square>{
       public void draw(Graphics g){for(Square s : this){s.draw(g);}}
       public void addNew(int x, int y){add(new Square(x,y));}
@@ -99,8 +135,7 @@ public class Squares extends Window implements ActionListener {
         }
         return res;
       }
-
-
     }
+
   }
 }
