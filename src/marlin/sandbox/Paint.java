@@ -7,16 +7,19 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
+
+// Paint lines
 public class Paint extends Window {
   public static int clicks = 0;
+  // Path is one line
   public static Path daPath = new Path();
+  // Pic is multiple lines
   public static Pic daPic = new Pic();
 
   public Paint() {
     super("Paint", 1000, 800);
   }
 
-  @Override
   public void mousePressed(MouseEvent me) {
     clicks++;
     daPath = new Path();
@@ -46,15 +49,13 @@ public class Paint extends Window {
     int x = 400, y = 200;
     String msg = "Clicks = " + clicks;
     g.drawString(msg,x,y);
-    FontMetrics fm = g.getFontMetrics(); // local variable fm is information about the current font.
-    int a = fm.getAscent(), d = fm.getDescent();
-    // the ascent is how far above the baseline the font extends, descent is how far below for letters like
-    // gqy
+    // local variable fm is information about the current font.
+    FontMetrics fm = g.getFontMetrics();
+    // the ascent is how far above the baseline the font extends, descent is how far below
     // so the entire height of the font will be a+d
+    int a = fm.getAscent(), d = fm.getDescent();
+    // width
     int w = fm.stringWidth(msg);
-    // note: since fonts can have variable character width, iii taking less space than mmm, we must
-    // tell fm, what string we are interseted in measuring and fm will perform the calculation for us
-    // and tell us how many pixels wide that string will be.
 
     // so now we know enough to draw the box.
     g.drawRect(x,y-a,w,a+d); // note: move y from baseline UP the page by the ascent
@@ -63,7 +64,8 @@ public class Paint extends Window {
     daPic.draw(g);
   }
 
-  // note: 这里用static定义nested class，这样从Paint内部调用的时候可以直接用Path, 外部调用需要Paint.Path
+  // note: 这里用static定义nested class，
+  // 这样从Paint内部调用的时候可以直接用Path, 外部调用需要Paint.Path
   public static class Path extends ArrayList<Point> {
     public void draw(Graphics g) {
       for(int i = 1; i<size(); i++) {
@@ -73,7 +75,7 @@ public class Paint extends Window {
     }
   }
 
-  // draw multiple lines
+  // Pic = multiple lines
   public static class Pic extends ArrayList<Path> {
     public void draw(Graphics g) {
       for(Path p : this) {
