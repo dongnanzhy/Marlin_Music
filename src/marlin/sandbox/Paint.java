@@ -7,8 +7,10 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-
-// Paint lines
+/*
+Paint lines, used in warm up
+DEPRECATED
+ */
 public class Paint extends Window {
   public static int clicks = 0;
   // Path is one line
