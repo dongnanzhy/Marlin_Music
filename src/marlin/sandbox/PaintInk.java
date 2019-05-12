@@ -12,12 +12,22 @@ public class PaintInk extends Window{
   }
   public static Ink.List inkList = new Ink.List();
   // static block add one single ink item so we can test showing a list
-  static {inkList.add(new Ink());}
+  //static {inkList.add(new Ink());}
 
   public void paintComponent(Graphics g){
     G.fillBackground(g, Color.WHITE);
     inkList.show(g);
-    g.setColor(Color.RED); Ink.BUFFER.show(g);
+    g.setColor(Color.RED);
+    // 注意：不止show了inkList，还show了正在画的BUFFER
+    Ink.BUFFER.show(g);
+
+    // 显示最后两个Ink norm后的距离
+    if(inkList.size()>1){
+      int last = inkList.size()-1;
+      int dist = inkList.get(last).norm.dist(inkList.get(last-1).norm);
+      g.setColor(dist>500000?Color.RED:Color.BLACK); // black for same red for different
+      g.drawString("Dist: "+dist, 600, 60);
+    }
   }
 
   //注意：这里的逻辑。BUFFER是一个class的static变量
