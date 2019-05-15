@@ -61,6 +61,9 @@ public class G{
         dy = Trans(from.v.lo, from.v.size(), to.loc.y, to.size.y);
       }
     }
+
+    // for smooth shape, average of points
+    public void blend(V v, int k){set((k*x + v.x)/(k+1), (k*y + v.y)/(k+1));}
   }
 
   // ----Rectangles----

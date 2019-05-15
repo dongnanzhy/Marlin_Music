@@ -58,13 +58,13 @@ public class Ink implements I.Show{
     // implement I.Area
     public boolean hit(int x, int y){return true;} // any point COULD go into ink
     // add first point
-    public void pressed(int x, int y) {
+    public void dn(int x, int y) {
       clear();
       bbox.set(x, y);
       add(x,y);
     }
-    public void dragged(int x, int y){add(x,y);} // add each point as it comes in
-    public void released(int x, int y){}
+    public void drag(int x, int y){add(x,y);} // add each point as it comes in
+    public void up(int x, int y){}
 
     // sub-sample K from n points in Buffer
     public G.PL subSample(int k){

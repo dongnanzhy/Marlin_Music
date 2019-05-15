@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 /*
+Used in warm up, deprecated!
 注意：核心思想
 1. Static Nested Class 来 access
 2. 通过implements interface来实现函数，传递不同的实例。
@@ -63,13 +64,13 @@ public class Squares extends Window implements ActionListener {
     int x = me.getX(), y = me.getY();
     // 注意：should always succeed because of BACKGROUND
     curArea = LIST.hit(x,y);
-    curArea.pressed(x,y);
+    curArea.dn(x,y);
     repaint(); // don't forget to repaint when you change something.
   }
 
   // drag mouse to either reshape or move
   public void mouseDragged(MouseEvent me) {
-    curArea.dragged(me.getX(), me.getY());
+    curArea.drag(me.getX(), me.getY());
     repaint();
   }
 
@@ -112,12 +113,12 @@ public class Squares extends Window implements ActionListener {
     //overide interface functions for dragging
     // Squares already implement hit() from parent(G.VS).
     // calculate drag offset
-    public void pressed(int x, int y) {
+    public void dn(int x, int y) {
       mouseDelta.set(loc.x - x, loc.y - y);
       dv.set(0,0); // stop moving once clicked
     }
-    public void dragged(int x, int y){loc.set(mouseDelta.x + x, mouseDelta.y + y);}
-    public void released(int x, int y){}
+    public void drag(int x, int y){loc.set(mouseDelta.x + x, mouseDelta.y + y);}
+    public void up(int x, int y){}
 
     /*
      Nested class storing all Squares
