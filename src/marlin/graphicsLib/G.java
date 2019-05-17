@@ -1,6 +1,7 @@
 package marlin.graphicsLib;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Random;
 
@@ -27,7 +28,7 @@ public class G{
   }
 
   // ----Vector-----, can represent point or size
-  public static class V{
+  public static class V implements Serializable{
     public int x,y;
     public V(int x, int y){this.set(x,y);}
     public V(V v){this.set(v.x, v.y);}
@@ -67,7 +68,7 @@ public class G{
   }
 
   // ----Rectangles----
-  public static class VS{
+  public static class VS implements Serializable{
     public V loc, size;
 
     public VS(int x, int y, int w, int h) {
@@ -93,7 +94,7 @@ public class G{
   }
 
   // ----Polyline----
-  public static class PL {
+  public static class PL implements Serializable {
     // we keep an array of points
     public V[] points;
 

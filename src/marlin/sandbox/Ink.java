@@ -67,10 +67,9 @@ public class Ink implements I.Show{
     public void up(int x, int y){}
 
     // sub-sample K from n points in Buffer
-    public G.PL subSample(int k){
-      G.PL res = new G.PL(k);
-      for(int i = 0; i<k; i++){res.points[i].set(this.points[i*(n-1)/(k-1)]);}
-      return res;
+    public void subSample(G.PL pl){
+      int K = pl.points.length;
+      for(int i = 0; i<K; i++){pl.points[i].set(this.points[i*(n-1)/(K-1)]);}
     }
   }
 
@@ -79,13 +78,13 @@ public class Ink implements I.Show{
     public static final int N = UC.normSampleSize, MAX = UC.normCoordMax;
     public static final G.VS CS = new G.VS(0,0,MAX,MAX); // the coordinate box for Transforms
     public Norm(){
+      // Use super() to create PL
       super(N);
       // subsample K from n points
-      G.PL temp = BUFFER.subSample(N);
+      BUFFER.subSample(this);
       // transform --> scale and move to specific position
       G.V.T.set(BUFFER.bbox, CS);
-      temp.transform();
-      for(int i = 0; i<N; i++){this.points[i].set(temp.points[i]);}
+      this.transform();
     }
 
     // Norms only draw at some place with a VS

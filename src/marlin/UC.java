@@ -16,7 +16,11 @@ public class UC {
   // max size for norm
   public static final int normCoordMax = 300;
   // threshold for a match of norm
-  public static final int noMatchDist = 500000;
+  public static final int noMatchDist = 300000;
+  // threshold for a match of DOT
+  public static final int dotThreshold = 20;
+  // file path to store Shapes DB
+  public static final String fullPathToShapeDB = "shapes.db";
 
   public static Color mainWindowBackgroundColor = Color.WHITE;
   public static Color dialogBackgroundColor = new Color(0,0,10); // light blue

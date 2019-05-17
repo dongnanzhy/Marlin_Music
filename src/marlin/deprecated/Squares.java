@@ -1,4 +1,4 @@
-package marlin.sandbox;
+package marlin.deprecated;
 import marlin.graphicsLib.G;
 import marlin.graphicsLib.Window;
 import marlin.I;

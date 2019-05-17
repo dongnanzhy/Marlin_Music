@@ -10,20 +10,24 @@ public class PaintInk extends Window{
   public PaintInk(){
     super("Paint Ink", UC.mainWindowWidth, UC.mainWindowHeight);
   }
-  public static Ink.List inkList = new Ink.List();
 
+  public static Ink.List inkList = new Ink.List();
+  // recognize Shape
+  public static String recognized = "";
   // prototype list
   public static Shape.Prototype.List pList = new Shape.Prototype.List();
 
   public void paintComponent(Graphics g){
     G.fillBackground(g, Color.WHITE);
     inkList.show(g);
-    g.setColor(Color.RED);
     // 注意：不止show了inkList，还show了正在画的BUFFER
-    Ink.BUFFER.show(g);
+    g.setColor(Color.RED); Ink.BUFFER.show(g);
+    // 显示Buffer size
+    g.drawString("points: "+Ink.BUFFER.n, 600,30);
+    // 显示recognize结果
+    g.drawString(recognized, 700, 40);
     // 显示prototype list
     pList.show(g);
-
     // 显示最后两个Ink norm后的距离
     if(inkList.size()>1){
       int last = inkList.size()-1;
@@ -40,6 +44,10 @@ public class PaintInk extends Window{
   public void mouseDragged(MouseEvent me){Ink.BUFFER.drag(me.getX(),me.getY()); repaint();}
   public void mouseReleased(MouseEvent me) {
     Ink ink = new Ink();
+    // Recognize shape from DB
+    Shape s = Shape.recognize(ink);
+    recognized = "Recog: " + ((s != null)?s.name : "UN-RECOGNIZED");
+
     inkList.add(ink);
 
     Shape.Prototype proto;
