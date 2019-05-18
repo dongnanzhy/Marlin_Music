@@ -85,7 +85,8 @@ public class Shape implements Serializable {
     // -- List of Prototypes --
     public static class List extends ArrayList<Prototype> implements I.Show, Serializable {
       // for showing
-      private static int m = 10, w = 60; private static G.VS showbox = new G.VS(m,m,w,w);
+      private static int m = 10, w = 60;
+      private static G.VS showbox = new G.VS(m,m,w,w);
       public void show(Graphics g){ // draw a list of boxes across top of screen
         g.setColor(Color.ORANGE);
         for(int i = 0; i<size(); i++){

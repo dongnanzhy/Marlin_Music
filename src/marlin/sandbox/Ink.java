@@ -26,7 +26,6 @@ public class Ink implements I.Show{
     norm.drawAt(g, vs);
   }
 
-
   // ---- List of Ink ----
   public static class List extends ArrayList<Ink> implements I.Show{
     public void show(Graphics g){for(Ink ink : this){ink.show(g);}}
