@@ -23,7 +23,7 @@ public class UC {
   public static final String fullPathToShapeDB = "shapes.db";
 
   // bid gesture
-  public static final int noBid = 100000;
+  public static final int noBid = 50000;
 
   public static Color mainWindowBackgroundColor = Color.WHITE;
   public static Color dialogBackgroundColor = new Color(0,0,10); // light blue
